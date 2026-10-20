@@ -107,7 +107,7 @@ resource "aws_ecs_service" "app" {
     rollback = true
   }
 
-  depends_on = [aws_lb_listener.http]
+  depends_on = [aws_lb_listener.http, aws_secretsmanager_secret_version.db_url]
 
   # Нову ревізію task definition створює CI/CD; Terraform її не відкочує.
   lifecycle {
