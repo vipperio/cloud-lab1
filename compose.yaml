@@ -1,0 +1,27 @@
+services:
+  db:
+    image: postgres:16.4-bookworm
+    environment:
+      POSTGRES_USER: notes
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-notes_local_dev}
+      POSTGRES_DB: notes
+    volumes:
+      - pgdata:/var/lib/postgresql/data      # дані переживають `docker compose down`
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U notes -d notes"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://notes:${POSTGRES_PASSWORD:-notes_local_dev}@db:5432/notes
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy             # чекаємо РЕАЛЬНОЇ готовності бази, а не просто старту контейнера
+
+volumes:
+  pgdata:
