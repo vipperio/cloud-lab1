@@ -3,7 +3,7 @@
 REST API для нотаток (Python / FastAPI / PostgreSQL), розгорнутий в AWS через Terraform.
 
 **Публічна адреса:** `http://<ALB_DNS_NAME>` _(підставити з `terraform output app_url`)_
-**Swagger UI:** `http://<ALB_DNS_NAME>/docs`
+**Swagger UI:** `http://<notes-api-alb-1940175042.eu-central-1.elb.amazonaws.com>/docs`
 
 ## Ендпоінти
 | Метод | Шлях | Опис |
