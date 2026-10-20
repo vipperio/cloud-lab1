@@ -71,7 +71,7 @@ def get_db():
 @app.get("/")
 def root():
     # hostname = ID контейнера: при оновленні сторінки видно, що відповідають різні екземпляри за ALB
-    return {"service": "notes-api", "version": APP_VERSION, "hostname": socket.gethostname()}
+    return {"service": "notes-api-v2", "version": APP_VERSION, "hostname": socket.gethostname()}
 
 
 @app.get("/health")
