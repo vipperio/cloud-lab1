@@ -90,16 +90,12 @@ terraform apply
 ## Для демонстрації
 
 ```bash
-# відповідь застосунку (версія = хеш останнього коміту)
 curl http://notes-api-alb-1940175042.eu-central-1.elb.amazonaws.com/
 
-# балансування: ім'я контейнера (hostname) має змінюватись
 for /l %i in (1,1,6) do @curl -s http://notes-api-alb-1940175042.eu-central-1.elb.amazonaws.com/ & echo.
 
-# дані з бази
 curl http://notes-api-alb-1940175042.eu-central-1.elb.amazonaws.com/api/notes
 
-# автодеплой: змінити код, запушити, стежити за запуском
 git add . && git commit -m "demo" && git push
 gh run watch
 ```
