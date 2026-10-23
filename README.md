@@ -103,3 +103,66 @@ curl http://notes-api-alb-1940175042.eu-central-1.elb.amazonaws.com/api/notes
 git add . && git commit -m "demo" && git push
 gh run watch
 ```
+
+## Завдання 1: контейнер локально
+
+```
+cd C:\cloud-lab1
+docker compose up --build -d
+docker compose ps
+docker volume ls
+curl -X POST http://localhost:8000/api/notes -H "Content-Type: application/json" -d "{\"title\":\"test\"}"
+docker compose down
+docker compose up -d
+curl http://localhost:8000/api/notes
+docker compose down
+```
+## Автодеплой
+
+```
+git add .
+git commit -m "demo change"
+git push
+gh run watch
+
+curl http://notes-api-alb-1940175042.eu-central-1.elb.amazonaws.com/
+git log --oneline -1
+```
+## Завдання 4: балансування
+
+```
+for /l %i in (1,1,6) do @curl -s http://notes-api-alb-1940175042.eu-central-1.elb.amazonaws.com/ & echo.
+curl http://notes-api-alb-1940175042.eu-central-1.elb.amazonaws.com/health
+curl http://notes-api-alb-1940175042.eu-central-1.elb.amazonaws.com/health/db
+```
+## Завдання 2 і 3: що показати в AWS
+
+```
+aws ecs describe-services --cluster notes-api-cluster --services notes-api-service --query "services[0].[desiredCount,runningCount]"
+aws ecr describe-images --repository-name notes-api --query "imageDetails[*].imageTags" --output text
+aws rds describe-db-instances --query "DBInstances[0].[PubliclyAccessible,MultiAZ,BackupRetentionPeriod,StorageEncrypted]"
+aws ec2 describe-security-groups --filters Name=group-name,Values=notes-api-db-sg --query "SecurityGroups[0].IpPermissions"
+aws secretsmanager describe-secret --secret-id notes-api/database-url --query Name
+aws logs tail /ecs/notes-api --since 10m
+```
+## Terraform і CI/CD
+
+```
+cd C:\cloud-lab1\terraform
+terraform state list
+terraform plan
+aws iam get-role --role-name notes-api-github-actions --query "Role.AssumeRolePolicyDocument"
+```
+
+## Відкат
+
+```
+aws ecs list-task-definitions --family-prefix notes-api-app
+aws ecs update-service --cluster notes-api-cluster --service notes-api-service --task-definition notes-api-app:<N>
+```
+## Destroy
+
+```
+cd C:\cloud-lab1\terraform
+terraform destroy
+```
